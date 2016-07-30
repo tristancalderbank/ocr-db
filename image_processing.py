@@ -83,10 +83,10 @@ class pdf:
     def __init__(self, name, path):
         self.name = name
         self.path = path
-        self.number_of_pages = get_number_of_pages()
+        self.number_of_pages = self.get_number_of_pages()
 
     def get_number_of_pages(self):
-        with open(self.name, "rb") as input_file:
+        with open(self.path, "rb") as input_file:
             pdf = pyPdf.PdfFileReader(input_file)
             return pdf.numPages
 
@@ -109,9 +109,7 @@ class tif_crop(buffer_file):
     def __init__(self, input_pdf, width, height, h_offset, v_offset):
         image_editor = image_magick(input_pdf.name)
         image_editor.crop(self.name, width, height, h_offset, v_offset)
-        
-#with tif_crop("", 100, 10, 0, 0) as test_crop:
-#    print "hello"
+
 
 
 """
