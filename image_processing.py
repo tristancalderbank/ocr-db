@@ -98,7 +98,7 @@ class pdf_page(buffer_file):
         input_file = pyPdf.PdfFileReader(open(input_pdf.name, "rb"))
 
         output = pyPdf.PdfFileWriter()
-        output.addPage(inputpdf.getPage(page))    
+        output.addPage(input_file.getPage(page))    
         with open(self.name, "wb") as output_file:
             output.write(output_file)
    
