@@ -50,3 +50,4 @@ Temporary Items
 *.pdf
 *.tif
 *.tiff
+*.pyc
