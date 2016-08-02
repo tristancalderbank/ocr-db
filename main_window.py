@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'MainWindow.ui'
+# Form implementation generated from reading ui file 'main_window.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -33,22 +33,31 @@ class Ui_MainWindow(object):
         self.label = QtGui.QLabel(self.centralwidget)
         self.label.setObjectName(_fromUtf8("label"))
         self.verticalLayout.addWidget(self.label)
-        self.lineEdit = QtGui.QLineEdit(self.centralwidget)
-        self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
-        self.verticalLayout.addWidget(self.lineEdit)
-        self.listWidget = QtGui.QListWidget(self.centralwidget)
-        self.listWidget.setObjectName(_fromUtf8("listWidget"))
-        self.verticalLayout.addWidget(self.listWidget)
+        self.searchBar = QtGui.QLineEdit(self.centralwidget)
+        self.searchBar.setObjectName(_fromUtf8("searchBar"))
+        self.verticalLayout.addWidget(self.searchBar)
+        self.matchList = QtGui.QListWidget(self.centralwidget)
+        self.matchList.setObjectName(_fromUtf8("matchList"))
+        self.verticalLayout.addWidget(self.matchList)
+        self.label_2 = QtGui.QLabel(self.centralwidget)
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.verticalLayout.addWidget(self.label_2)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.pushButton_2 = QtGui.QPushButton(self.centralwidget)
-        self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
-        self.horizontalLayout.addWidget(self.pushButton_2)
+        self.directoryBar = QtGui.QLineEdit(self.centralwidget)
+        self.directoryBar.setObjectName(_fromUtf8("directoryBar"))
+        self.horizontalLayout.addWidget(self.directoryBar)
+        self.folderSelect = QtGui.QPushButton(self.centralwidget)
+        self.folderSelect.setObjectName(_fromUtf8("folderSelect"))
+        self.horizontalLayout.addWidget(self.folderSelect)
         self.verticalLayout.addLayout(self.horizontalLayout)
+        self.runOCR = QtGui.QPushButton(self.centralwidget)
+        self.runOCR.setObjectName(_fromUtf8("runOCR"))
+        self.verticalLayout.addWidget(self.runOCR)
         MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtGui.QStatusBar(MainWindow)
-        self.statusbar.setObjectName(_fromUtf8("statusbar"))
-        MainWindow.setStatusBar(self.statusbar)
+        self.statusBar = QtGui.QStatusBar(MainWindow)
+        self.statusBar.setObjectName(_fromUtf8("statusBar"))
+        MainWindow.setStatusBar(self.statusBar)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -56,5 +65,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "ocr-db", None))
         self.label.setText(_translate("MainWindow", "Search", None))
-        self.pushButton_2.setText(_translate("MainWindow", "OCR Folder", None))
+        self.label_2.setText(_translate("MainWindow", "Folder", None))
+        self.folderSelect.setText(_translate("MainWindow", "Browse", None))
+        self.runOCR.setText(_translate("MainWindow", "Run OCR", None))
 

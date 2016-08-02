@@ -23,25 +23,42 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="lineEdit"/>
+     <widget class="QLineEdit" name="searchBar"/>
     </item>
     <item>
-     <widget class="QListWidget" name="listWidget"/>
+     <widget class="QListWidget" name="matchList"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Folder</string>
+      </property>
+     </widget>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QLineEdit" name="directoryBar"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="folderSelect">
         <property name="text">
-         <string>OCR Folder</string>
+         <string>Browse</string>
         </property>
        </widget>
       </item>
      </layout>
     </item>
+    <item>
+     <widget class="QPushButton" name="runOCR">
+      <property name="text">
+       <string>Run OCR</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <resources/>
  <connections/>
