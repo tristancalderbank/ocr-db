@@ -1,12 +1,13 @@
 from subprocess import check_output
 import time
 import pyPdf
+import os
 
 import debug
 from debug import logger
 
 # flags
-DELETE_BUFFER_FILES = False 
+DELETE_BUFFER_FILES = True 
 DEBUG_IMAGE_PROCESSING = True
 
 if not DEBUG_IMAGE_PROCESSING:

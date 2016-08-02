@@ -61,9 +61,6 @@ class pdf_processor:
     def __enter__(self):
         return self
 
-    def convert_to_tiff(self):
-        print check_output("magick -density " + str(self.dpi) + " \"" + self.input_path + "\" -depth 8 " + self.tiff_buffer_name, shell=True) 
-
     def strip_text(self):
         with open(self.txt_buffer_name + ".txt", "rb") as input_file:
             return input_file.read()
