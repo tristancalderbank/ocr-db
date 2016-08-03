@@ -7,7 +7,7 @@ class tesseract:
     tiff_buffer_name = "tiff_buffer.tif"
     txt_buffer_name = "txt_buffer"
 
-    def __init__(self, input_path, output_path, dpi=300):
+    def __init__(self, input_path, output_path=None):
         self.input_path = input_path
         self.output_path = output_path
         self.dpi = dpi
@@ -29,8 +29,6 @@ class tesseract:
         self.convert_to_tiff()
         self.process_ocr()
         pdf_text = self.strip_text()
-        text_filter = string_filter(pdf_text)
-        pdf_text = text_filter.strip("single_quotes")
         return pdf_text
    
 
