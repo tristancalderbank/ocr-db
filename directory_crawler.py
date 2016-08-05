@@ -3,9 +3,21 @@ import os
 import glob
 from subprocess import check_output
 
+import debug
+from debug import logger
+
+DEBUG_DIRECTORY_CRAWLER = True
+
+if not DEBUG_DIRECTORY_CRAWLER:
+    logger.setLevel(debug.logging.INFO)
+
+
 class crawler:
-    
-    master_pdf_list = []
+    """ Recursively crawls a directory looking for files with a given extension.
+    """   
+ 
+    matches = []
+    extension = '*.pdf'
     
     def __init__(self, root):
         self.root = root
@@ -15,14 +27,13 @@ class crawler:
         if path == None:
             path = self.root
         
-   	print path     
         os.chdir(path)
        
-        current_contents = os.listdir(path)
+        current_dir_contents = os.listdir(path)
         
         directories = []
 
-        for item in current_contents:
+        for item in current_dir_contents:
             if os.path.isdir(path + "\\" + item):
                 directories.append(item)
 
@@ -31,8 +42,9 @@ class crawler:
                 self.crawl(path + "\\" + folder)
 
         os.chdir(path)       
-        pdfs = glob.glob('*.pdf')
-        for pdf in pdfs:
-            self.master_pdf_list.append(path + "\\" + pdf)
+        current_dir_matches = glob.glob(extension)
+        for match in current_dir_matches:
+            self.matches.append(path + "\\" + match)
 
-        return self.master_pdf_list
+        logger.debug("Directory crawler found a total of %d pdfs." % len(master_pdf_list))
+        return self.matches
