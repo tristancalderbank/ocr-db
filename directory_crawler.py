@@ -42,9 +42,9 @@ class crawler:
                 self.crawl(path + "\\" + folder)
 
         os.chdir(path)       
-        current_dir_matches = glob.glob(extension)
+        current_dir_matches = glob.glob(self.extension)
         for match in current_dir_matches:
             self.matches.append(path + "\\" + match)
 
-        logger.debug("Directory crawler found a total of %d pdfs." % len(master_pdf_list))
+        logger.debug("Directory crawler found a total of %d pdfs." % len(self.matches))
         return self.matches

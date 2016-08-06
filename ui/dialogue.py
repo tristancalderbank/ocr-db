@@ -25,14 +25,14 @@ except AttributeError:
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName(_fromUtf8("Dialog"))
-        Dialog.resize(500, 166)
+        Dialog.resize(500, 185)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(2)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
         Dialog.setSizePolicy(sizePolicy)
-        Dialog.setMinimumSize(QtCore.QSize(500, 166))
-        Dialog.setMaximumSize(QtCore.QSize(500, 166))
+        Dialog.setMinimumSize(QtCore.QSize(500, 185))
+        Dialog.setMaximumSize(QtCore.QSize(500, 185))
         self.verticalLayout = QtGui.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.progressBar = QtGui.QProgressBar(Dialog)
@@ -45,6 +45,10 @@ class Ui_Dialog(object):
         self.progressBar.setProperty("value", 24)
         self.progressBar.setObjectName(_fromUtf8("progressBar"))
         self.verticalLayout.addWidget(self.progressBar)
+        self.currentTask = QtGui.QLabel(Dialog)
+        self.currentTask.setAlignment(QtCore.Qt.AlignCenter)
+        self.currentTask.setObjectName(_fromUtf8("currentTask"))
+        self.verticalLayout.addWidget(self.currentTask)
         self.currentFile = QtGui.QLabel(Dialog)
         self.currentFile.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.currentFile.setObjectName(_fromUtf8("currentFile"))
@@ -77,6 +81,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(_translate("Dialog", "Running OCR", None))
+        self.currentTask.setText(_translate("Dialog", "converting to tiff...", None))
         self.currentFile.setText(_translate("Dialog", "Current File:", None))
         self.filesProcessed.setText(_translate("Dialog", "Files Processed: ", None))
         self.elapsedTime.setText(_translate("Dialog", "Elapsed Time:", None))

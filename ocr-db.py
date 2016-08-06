@@ -10,6 +10,8 @@ import database as db
 import time
 
 
+#flags
+RUN_OCR_THREAD = False
 
 class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 
@@ -29,11 +31,10 @@ class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 		self.directoryBar.insert(self.directory)
 
 	def open_dialog(self):
-		if self.dialog is None:
-			self.dialog = running_dialog(self.directory)
-		self.dialog.stopButton.clicked.connect(self.show_main_window)
+		self.dialog = running_dialog(self.directory)
 		self.hide()
 		self.dialog.show()
+		self.dialog.finished.connect(self.show_main_window)
 
 	def show_main_window(self):
 		self.show()
@@ -42,30 +43,64 @@ class running_dialog(QtGui.QDialog, dialogue.Ui_Dialog):
 	def __init__(self, directory, parent=None):
 		super(running_dialog, self).__init__(parent)
 		self.setupUi(self)
-		self.stopButton.clicked.connect(self.close_dialog)
+		self.stopButton.clicked.connect(self.reject)
 
-		ocr_thread = ocr_thread(directory)
-		ocr_thread.start()
+		global RUN_OCR_THREAD
+		RUN_OCR_THREAD = True
+		self.processing_thread = ocr_thread(directory)
+		self.processing_thread.finished.connect(self.close_dialog)
+		self.processing_thread.update_dialog.connect(self.update_dialog)
+		self.processing_thread.start()
+
+	def update_dialog(self):
+		self.currentTask.setText(self.processing_thread.current_task)
+		self.currentFile.setText(self.processing_thread.current_file)
+		self.filesProcessed.setText(self.processing_thread.files_processed)
+		self.elapsedTime.setText(self.processing_thread.elapsed_time)
+		self.timeRemaining.setText(self.processing_thread.time_remaining)
+		self.progressBar.setValue(self.processing_thread.percent_complete)
+
+	def reject(self):
+		self.stop_processing_thread()
+
+	def stop_processing_thread(self):
+		global RUN_OCR_THREAD
+		RUN_OCR_THREAD = False
+		self.currentTask.setText("Stopping OCR...")
+
+	def close_dialog(self):	
+		super(running_dialog, self).reject()
 	
-	def close_dialog(self):
-		self.close()
+class ocr_thread(QtCore.QThread):
 
-class ocr_thread(QtCore.QThread)	
+	update_dialog = QtCore.pyqtSignal()
 
-	def __init__(self, directory):
+	current_task = "doing nothing"
+	current_file = "Current File: "
+	files_processed = "Files Processed: "
+	elapsed_time = "Elapsed Time: "
+	time_remaining = "Estimated Remaining: "
+	percent_complete = 0
+
+	def __init__(self, directory, parent=None):
 		self.directory = directory
-		self.update_dialog = QtCore.pyqtSignal()
+		super(ocr_thread, self).__init__(parent)
 
 	def run(self):
-		crawler = directory_crawler.crawler(self.directory)
-		pdf_list = crawler.crawl()
-
-		with db.database() as database:
-			for file in pdf_list:
-				self.currentFile.setText("Current File: %s" % file)
-				time.sleep(3)
+		global RUN_OCR_THREAD
 		
+		if RUN_OCR_THREAD:	
+			crawler = directory_crawler.crawler(self.directory)
+			pdf_list = crawler.crawl()
 
+		if RUN_OCR_THREAD:
+			with db.database() as database:
+				for file in pdf_list:
+					self.current_file = "Current File: %s" % file
+					self.update_dialog.emit()
+					time.sleep(10)
+
+	
 
 def main():
 	app = QtGui.QApplication(sys.argv)
