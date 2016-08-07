@@ -1,6 +1,8 @@
 import sqlite3
+import os
 
-database_name = "C:\\Users\\sengl_000\\Desktop\\pdf.db"
+current_directory = os.getcwd()
+database_name = current_directory + "/" + "pdf.db"
 
 class database:
 
@@ -23,7 +25,7 @@ class database:
     def __enter__(self):
         return self
 
-    def insert_row(self, table, file_name, contents, path):
+    def insert_row(self, file_name, contents, path):
 
         row_data = [file_name, contents, path]
 
@@ -62,6 +64,10 @@ class database:
         for row in cursor:
             print str(row[0]) + " " + row[1] + " " + row[2] + " " + row[3]
 
+    def get_rows(self):
+        cursor = self.conn.execute("SELECT ID, FILE_NAME, CONTENTS, PATH FROM PDF")
+	return cursor
+
     def __exit__(self, exc_type, exc_value, traceback):
         self.conn.close()
 
@@ -80,3 +86,10 @@ class string_filter:
 
         return self.input_string
 
+"""
+with database() as db:
+	for i in range(10):
+		db.insert_row("chickenzzz" + str(i), "aaaa", "C:/user/chicketate")
+	db.print_rows()	
+
+"""

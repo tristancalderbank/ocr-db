@@ -8,20 +8,27 @@ import ui.dialogue as dialogue
 import directory_crawler
 import database as db
 import time
-
+import image_processing as ip
 
 #flags
 RUN_OCR_THREAD = False
 
 class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 
+	matches = []
+
 	def __init__(self, parent=None):
 		super(main_gui, self).__init__(parent)
 		self.setupUi(self)
+
 		self.folderSelect.clicked.connect(self.get_directory)
 		self.runOCR.clicked.connect(self.open_dialog)
+
 		self.dialog = None
 		self.directory = None
+		self.load_database()
+
+		self.searchBar.textEdited.connect(self.search)
 
 	def get_directory(self):
 		self.matchList.clear()
@@ -35,6 +42,20 @@ class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 		self.hide()
 		self.dialog.show()
 		self.dialog.finished.connect(self.show_main_window)
+
+	def load_database(self):
+		with db.database() as database:
+			rows = database.get_rows()	
+			for row in rows:
+				self.matches.append(row[1])
+				self.matchList.addItem(row[1])	
+
+	def search(self):
+		self.matchList.clear()
+		for item in self.matches:
+			if str(self.searchBar.text()) in item:
+				self.matchList.addItem(item) 		
+		
 
 	def show_main_window(self):
 		self.show()
@@ -95,11 +116,14 @@ class ocr_thread(QtCore.QThread):
 
 		if RUN_OCR_THREAD:
 			with db.database() as database:
+				files_processed = 0
 				for file in pdf_list:
-					self.current_file = "Current File: %s" % file
+					file_name = file.split("//")[-1]
+					self.current_file = "Current File: %s" % file_name
 					self.update_dialog.emit()
-					time.sleep(10)
-
+					
+					#pdf = ip.pdf(file_name, file)
+					time.sleep(5)
 	
 
 def main():
