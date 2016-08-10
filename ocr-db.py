@@ -44,6 +44,7 @@ class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 		self.dialog.finished.connect(self.show_main_window)
 
 	def load_database(self):
+		self.matchList.clear()
 		with db.database() as database:
 			rows = database.get_rows()	
 			for row in rows:
@@ -59,6 +60,7 @@ class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 
 	def show_main_window(self):
 		self.show()
+		self.load_database()
 
 class running_dialog(QtGui.QDialog, dialogue.Ui_Dialog):
 	def __init__(self, directory, parent=None):
@@ -93,7 +95,11 @@ class running_dialog(QtGui.QDialog, dialogue.Ui_Dialog):
 		super(running_dialog, self).reject()
 	
 class ocr_thread(QtCore.QThread):
+	""" Performs OCR on pdf's found in chosen directory.
 
+	get input pdf --> get first page --> get first crop as tif --> run tesseract on crop --> repeat
+	
+	"""
 	update_dialog = QtCore.pyqtSignal()
 
 	current_task = "doing nothing"
@@ -118,11 +124,26 @@ class ocr_thread(QtCore.QThread):
 			with db.database() as database:
 				files_processed = 0
 				for file in pdf_list:
+
+					# check if file in database					
+
 					file_name = file.split("//")[-1]
 					self.current_file = "Current File: %s" % file_name
 					self.update_dialog.emit()
 					
-					#pdf = ip.pdf(file_name, file)
+					pdf = ip.pdf(file_name, file)
+
+					for page_number in range(pdf.number_of_pages):
+						with ip.pdf_page(pdf, page_number) as page:
+	
+							# decide to do moving crop or not, loop for moving crop
+
+							with ip.tif_crop(page, 100, 20, 0, 0) as crop:
+								with tesseract(crop) as ocr_processor:
+									print "Found this text in %s:" % file_name		
+									print ocr_processor.process_ocr()
+ 
+	
 					time.sleep(5)
 	
 
