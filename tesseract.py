@@ -16,17 +16,11 @@ class tesseract:
 
     txt_buffer_name = "txt_buffer"
 
-<<<<<<< HEAD
+
     def __init__(self, input_file, output_file_path=None):
         self.input_file_name = input_file.name
-	self.input_file_path = input_file.path
+        self.input_file_path = None
         self.output_file_path = output_file_path
-=======
-    def __init__(self, input_path, output_path=None):
-        self.input_path = input_path
-        self.output_path = output_path
-        self.dpi = dpi
->>>>>>> d353ac5835a79c72c6ecbe21587a588af819c263
 
     def __enter__(self):
         return self

@@ -3,15 +3,6 @@ import os
 import glob
 from subprocess import check_output
 
-import debug
-from debug import logger
-
-DEBUG_DIRECTORY_CRAWLER = True
-
-if not DEBUG_DIRECTORY_CRAWLER:
-    logger.setLevel(debug.logging.INFO)
-
-
 class crawler:
     """ Recursively crawls a directory looking for files with a given extension.
     """   
@@ -46,5 +37,4 @@ class crawler:
         for match in current_dir_matches:
             self.matches.append(path + "\\" + match)
 
-        logger.debug("Directory crawler found a total of %d pdfs." % len(self.matches))
         return self.matches

@@ -9,6 +9,14 @@ import directory_crawler
 import database as db
 import time
 import image_processing as ip
+import tesseract
+import debug
+from debug import logger
+
+DEBUG_OCR_DB = True
+
+if not DEBUG_OCR_DB:
+    logger.setLevel(debug.logging.INFO)
 
 #flags
 RUN_OCR_THREAD = False
@@ -119,12 +127,14 @@ class ocr_thread(QtCore.QThread):
 		if RUN_OCR_THREAD:	
 			crawler = directory_crawler.crawler(self.directory)
 			pdf_list = crawler.crawl()
+			logger.debug("Directory crawler found a total of %d pdfs." % len(pdf_list))
 
 		if RUN_OCR_THREAD:
 			with db.database() as database:
 				files_processed = 0
 				for file in pdf_list:
-
+					if not RUN_OCR_THREAD:
+						break
 					# check if file in database					
 
 					file_name = file.split("//")[-1]
@@ -134,16 +144,21 @@ class ocr_thread(QtCore.QThread):
 					pdf = ip.pdf(file_name, file)
 
 					for page_number in range(pdf.number_of_pages):
+						if not RUN_OCR_THREAD:
+							break
 						with ip.pdf_page(pdf, page_number) as page:
-	
-							# decide to do moving crop or not, loop for moving crop
+
+                                                    # decide to do moving crop or not, loop for moving crop
+
+                                                        crop_height = 20
+                                                        offset = 
 
 							with ip.tif_crop(page, 100, 20, 0, 0) as crop:
-								with tesseract(crop) as ocr_processor:
+								with tesseract.tesseract(crop) as ocr_processor:
 									print "Found this text in %s:" % file_name		
 									print ocr_processor.process_ocr()
- 
-	
+
+
 					time.sleep(5)
 	
 
