@@ -102,6 +102,9 @@ class pdf_page(buffer_file):
         output.addPage(input_file.getPage(page))    
         with open(self.name, "wb") as output_file:
             output.write(output_file)
+
+        image_editor = image_magick(self.name)
+        self.height = image_editor.height
    
 class tif_crop(buffer_file):
 
