@@ -34,10 +34,10 @@ class image_magick:
         self.height = self.get_height()
 
     def get_width(self):
-        return check_output('magick identify -format "%w" ' + self.input_file, shell=True)
+        return int(check_output('magick identify -format "%w" ' + self.input_file, shell=True))
 
     def get_height(self):
-        return check_output('magick identify -format "%h" ' + self.input_file, shell=True)
+        return int(check_output('magick identify -format "%h" ' + self.input_file, shell=True))
 
     def crop(self, output_file, width, height, h_offset, v_offset):
         shell_command = 'magick -density {} {} -crop {}%x{}%+{}+{} {}'.format(self.dpi, self.input_file, width, height, h_offset, v_offset, output_file)

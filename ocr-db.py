@@ -124,10 +124,10 @@ class ocr_thread(QtCore.QThread):
 	def run(self):
 		global RUN_OCR_THREAD
 		
-		if RUN_OCR_THREAD:	
-			crawler = directory_crawler.crawler(self.directory)
-			pdf_list = crawler.crawl()
-			logger.debug("Directory crawler found a total of %d pdfs." % len(pdf_list))
+	
+		crawler = directory_crawler.crawler(self.directory)
+		pdf_list = crawler.crawl()
+		logger.debug("Directory crawler found a total of %d pdfs." % len(pdf_list))
 
 		if RUN_OCR_THREAD:
 			with db.database() as database:
@@ -148,15 +148,21 @@ class ocr_thread(QtCore.QThread):
 							break
 						with ip.pdf_page(pdf, page_number) as page:
 
-                                                    # decide to do moving crop or not, loop for moving crop
+						    # decide to do moving crop or not, loop for moving crop
+							print page.height
+							crop_height_percent = 20
+							crop_width_percent = 100
+							crop_height_px = (float(crop_height_percent) / 100) * page.height
+							offset_px = int(page.height * (float(crop_height_percent) / 100) / 2)
+							offset_max = (1 - (float(crop_height_percent) / 100)) * page.height
 
-                                                        crop_height = 20
-                                                        offset = 
-
-							with ip.tif_crop(page, 100, 20, 0, 0) as crop:
-								with tesseract.tesseract(crop) as ocr_processor:
-									print "Found this text in %s:" % file_name		
-									print ocr_processor.process_ocr()
+							for offset in range(0, int(offset_max + crop_height_px), offset_px):
+								if not RUN_OCR_THREAD:
+									break
+								with ip.tif_crop(page, crop_width_percent, crop_height_percent, 0, offset) as crop:
+									with tesseract.tesseract(crop) as ocr_processor:
+										print "Found this text in %s:" % file_name		
+										print ocr_processor.process_ocr()
 
 
 					time.sleep(5)
