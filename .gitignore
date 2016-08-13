@@ -51,3 +51,4 @@ Temporary Items
 *.tif
 *.tiff
 *.pyc
+*.db

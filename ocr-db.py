@@ -133,11 +133,15 @@ class ocr_thread(QtCore.QThread):
 			with db.database() as database:
 				files_processed = 0
 				for file in pdf_list:
+				    
+					file_name = file.split("//")[-1]
 					if not RUN_OCR_THREAD:
 						break
-					# check if file in database					
 
-					file_name = file.split("//")[-1]
+					if database.search("PDF", "FILE_NAME", file_name):
+						logger.debug("File already in database, skipping")
+						continue				
+
 					self.current_file = "Current File: %s" % file_name
 					self.update_dialog.emit()
 					
@@ -148,21 +152,30 @@ class ocr_thread(QtCore.QThread):
 							break
 						with ip.pdf_page(pdf, page_number) as page:
 
-						    # decide to do moving crop or not, loop for moving crop
-							print page.height
 							crop_height_percent = 20
 							crop_width_percent = 100
 							crop_height_px = (float(crop_height_percent) / 100) * page.height
 							offset_px = int(page.height * (float(crop_height_percent) / 100) / 2)
 							offset_max = (1 - (float(crop_height_percent) / 100)) * page.height
+							
+							contents = ""
 
-							for offset in range(0, int(offset_max + crop_height_px), offset_px):
+							offsets = range(0, int(offset_max + crop_height_px), offset_px)
+							number_of_crops = len(offsets)
+							
+							for crop_number, offset in enumerate(offsets):
+								logger.debug("Processing crop %d out of %d" % (crop_number, number_of_crops))
 								if not RUN_OCR_THREAD:
 									break
+
+								
 								with ip.tif_crop(page, crop_width_percent, crop_height_percent, 0, offset) as crop:
 									with tesseract.tesseract(crop) as ocr_processor:
-										print "Found this text in %s:" % file_name		
-										print ocr_processor.process_ocr()
+										contents += " "
+										contents += ocr_processor.process_ocr()
+
+							if not RUN_OCR_THREAD:
+								database.insert_row(file_name, contents, file)
 
 
 					time.sleep(5)

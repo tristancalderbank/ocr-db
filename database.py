@@ -1,6 +1,16 @@
 import sqlite3
 import os
 
+import debug
+from debug import logger
+
+# flags 
+DEBUG_DATABASE = True
+
+if not DEBUG_DATABASE:
+    logger.setLevel(debug.logging.INFO)
+
+
 current_directory = os.getcwd()
 database_name = current_directory + "/" + "pdf.db"
 
@@ -52,6 +62,7 @@ class database:
         " FROM " + table +\
         " WHERE instr(" + column + ", " + "'" + query + "'" + ");"
 
+        logger.debug("Search query: \n%s" % command)
         cursor = self.conn.execute(command)
         for row in cursor:
             rows.append(row)
@@ -71,25 +82,3 @@ class database:
     def __exit__(self, exc_type, exc_value, traceback):
         self.conn.close()
 
-# may need more complex filtering in the future
-class string_filter:
-
-    filters = {"special_chars": [";", '"', "'", "(", ")"],\
-               "single_quotes": ["'"]}
-    
-    def __init__(self, input_string):
-        self.input_string = input_string
-    
-    def strip(self, filter_name):
-        for item in self.filters[filter_name]:
-            self.input_string = self.input_string.replace(item, "")
-
-        return self.input_string
-
-"""
-with database() as db:
-	for i in range(10):
-		db.insert_row("chickenzzz" + str(i), "aaaa", "C:/user/chicketate")
-	db.print_rows()	
-
-"""
