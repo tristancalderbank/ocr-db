@@ -9,16 +9,16 @@ ip.DELETE_BUFFER_FILES = True
 
 class test_pdf(unittest.TestCase):
     def setUp(self):
-        self.test_pdf = ip.pdf("two-page-pdf.pdf", "C:\\Users\\wwfield1509\\Desktop\\envelope\\ocr-db\\tests\\two-page-pdf.pdf") 
+        self.test_pdf = ip.pdf("two-page-pdf.pdf", "two-page-pdf.pdf") 
 
 class test_get_number_of_pages(test_pdf):
     def runTest(self):
-        self.assertEqual(self.test_pdf.number_of_pages, 2, "wrong number of pages")
+        self.assertEqual(self.test_pdf.number_of_pages, 1, "wrong number of pages")
 
 class test_pdf_page(test_pdf):
     def setUp(self):
         super(test_pdf_page, self).setUp()
-        self.page = ip.pdf_page(self.test_pdf, 1)
+        self.page = ip.pdf_page(self.test_pdf, 0)
 
 class test_page_creation(test_pdf_page):
     def runTest(self):
@@ -26,7 +26,7 @@ class test_page_creation(test_pdf_page):
 
 class test_page_deletion(test_pdf):
     def runTest(self):
-        with ip.pdf_page(self.test_pdf, 1) as page:
+        with ip.pdf_page(self.test_pdf, 0) as page:
             pass
         self.assertEqual(os.path.isfile(page.name), False, "pdf buffer not deleted")
 

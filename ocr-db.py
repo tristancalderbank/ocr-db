@@ -14,6 +14,7 @@ import debug
 from debug import logger
 
 DEBUG_OCR_DB = True
+db.DEBUG_DATABASE = False
 
 if not DEBUG_OCR_DB:
     logger.setLevel(debug.logging.INFO)
