@@ -40,15 +40,16 @@ class image_magick:
         return int(check_output('magick identify -format "%h" ' + self.input_file, shell=True))
 
     def crop(self, output_file, width, height, h_offset, v_offset):
-        shell_command = 'magick -density {} {} -crop {}%x{}%+{}+{} {}'.format(self.dpi, self.input_file, width, height, h_offset, v_offset, output_file)
+        shell_command = 'magick -density {} {} -crop {}%x{}%+{}+{} -alpha Off -depth 8 {}'.format(self.dpi, self.input_file, width, height, h_offset, v_offset, output_file)
         logger.debug(shell_command)
         check_output(shell_command)
 
+"""
     def split(self, output_file, percent_width, percent_height):
         shell_command = 'magick -density {4} {0} -crop {1}%x{2}% -depth 8 {3}'.format(input_file.name, percent_width, percent_height, output_file, dpi)
         logger.debug(shell_command)
         check_output(shell_command)
-
+"""
 
 class buffer_file:
     

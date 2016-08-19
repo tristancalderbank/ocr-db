@@ -13,7 +13,7 @@ class test_pdf(unittest.TestCase):
 
 class test_get_number_of_pages(test_pdf):
     def runTest(self):
-        self.assertEqual(self.test_pdf.number_of_pages, 1, "wrong number of pages")
+        self.assertEqual(self.test_pdf.number_of_pages, 2, "wrong number of pages")
 
 class test_pdf_page(test_pdf):
     def setUp(self):

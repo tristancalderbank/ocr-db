@@ -40,13 +40,12 @@ class tesseract:
         print check_output("tesseract " + self.input_file_path + " " + output_file_path + " pdf", shell=True)
 
     def cleanup(self):
-	if DELETE_BUFFER_FILES:
-	    try:
-	        os.remove(self.txt_buffer_name + ".txt")
-	    except WindowsError:
-	        logger.debug("Tried to delete txt buffer and failed")
+        if DELETE_BUFFER_FILES:
+            try:
+                os.remove(self.txt_buffer_name + ".txt")
+            except WindowsError:
+                logger.debug("Tried to delete txt buffer and failed")
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.cleanup()
-
 
