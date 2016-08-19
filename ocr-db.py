@@ -4,7 +4,9 @@ from PyQt4 import QtCore
 
 import sys
 import ui.main_window as main_window
-import ui.dialogue as dialogue
+import ui.dialog as dialog
+import ui.contents_dialog as contents_dialog
+
 import directory_crawler
 import database as db
 import time
@@ -14,7 +16,7 @@ import debug
 from debug import logger
 
 DEBUG_OCR_DB = True
-db.DEBUG_DATABASE = False
+db.DEBUG_DATABASE = True
 
 if not DEBUG_OCR_DB:
     logger.setLevel(debug.logging.INFO)
@@ -33,10 +35,11 @@ class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 		self.folderSelect.clicked.connect(self.get_directory)
 		self.runOCR.clicked.connect(self.open_dialog)
 
+
 		self.dialog = None
 		self.directory = None
 		self.load_database()
-
+		self.open_contents_dialog()
 		self.searchBar.textEdited.connect(self.search)
 
 	def get_directory(self):
@@ -51,6 +54,13 @@ class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 		self.hide()
 		self.dialog.show()
 		self.dialog.finished.connect(self.show_main_window)
+
+	def open_contents_dialog(self):
+		self.dialog = contents_window("yo")
+		self.dialog.show()
+		#self.hide()
+
+		#self.dialog.finished.connect(self.show_main_window)
 
 	def load_database(self):
 		self.matchList.clear()
@@ -71,7 +81,7 @@ class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 		self.show()
 		self.load_database()
 
-class running_dialog(QtGui.QDialog, dialogue.Ui_Dialog):
+class running_dialog(QtGui.QDialog, dialog.Ui_Dialog):
 
 	time_elapsed = 0
     
@@ -79,7 +89,7 @@ class running_dialog(QtGui.QDialog, dialogue.Ui_Dialog):
 		super(running_dialog, self).__init__(parent)
 		self.setupUi(self)
 		self.stopButton.clicked.connect(self.reject)
-	    
+		logger.debug("sup")
 
 		# ocr thread
 		global RUN_OCR_THREAD
@@ -117,7 +127,15 @@ class running_dialog(QtGui.QDialog, dialogue.Ui_Dialog):
 	def close_dialog(self):
 		self.run_timer.stop()
 		super(running_dialog, self).reject()
-	
+
+class contents_window(QtGui.QDialog, contents_dialog.Ui_contentsDialog):
+
+	def __init__(self, contents, parent=None):
+		super(contents_window, self).__init__(parent)
+		self.setupUi(self)
+		self.contentsBox.setPlainText(contents)
+
+
 class ocr_thread(QtCore.QThread):
 	""" Performs OCR on pdf's found in chosen directory.
 
@@ -172,7 +190,7 @@ class ocr_thread(QtCore.QThread):
 							break
 						with ip.pdf_page(pdf, page_number) as page:
 
-							crop_height_percent = 20
+							crop_height_percent = 100
 							crop_width_percent = 100
 							crop_height_px = (float(crop_height_percent) / 100) * page.height
 							offset_px = int(page.height * (float(crop_height_percent) / 100) / 2)
