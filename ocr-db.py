@@ -12,6 +12,7 @@ import database as db
 import time
 import image_processing as ip
 import tesseract
+import filter
 import debug
 from debug import logger
 
@@ -27,6 +28,8 @@ if not DEBUG_OCR_DB:
 RUN_OCR_THREAD = False
 
 class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
+
+	loaded_database = {}
 
 	def __init__(self, parent=None):
 		super(main_gui, self).__init__(parent)
@@ -55,7 +58,8 @@ class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 		self.dialog.finished.connect(self.show_main_window)
 
 	def open_contents_dialog(self):
-		self.dialog = contents_window(self.matchList.selectedItems()[0].text())
+		selected_item = self.matchList.selectedItems()[0].text()
+		self.dialog = contents_window(self.loaded_database[str(selected_item)])
 		self.dialog.show()
 
 	def load_database(self):
@@ -63,19 +67,15 @@ class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 		with db.database() as database:
 			rows = database.get_rows()	
 			for row in rows:
-				self.matchList.addItem(row[1])	
+				self.matchList.addItem(row[1])
+				self.loaded_database.update({row[1]: row[2]})
 
 
-        def search_
-                
-		for row in rows:
-			self.matchList.addItem(row[1])
-
-	def search(self, query, column_to_return):
+	def search(self):
 		self.matchList.clear()
-		with db.database() as database:
-			rows = database.search(self.searchBar.text())   
-  
+		for file_name in self.loaded_database:
+			if str(self.searchBar.text()).upper() in str(file_name).upper() or str(self.searchBar.text()).upper() in self.loaded_database[str(file_name)].upper():
+				self.matchList.addItem(file_name)
 
 	def show_main_window(self):
 		self.show()
@@ -175,8 +175,9 @@ class ocr_thread(QtCore.QThread):
 					if not RUN_OCR_THREAD:
 						break
 
-					if database.search("PDF", "FILE_NAME", file_name):
+					if database.search(file_name):
 						logger.debug("File already in database, skipping")
+						number_of_files_processed += 1
 						continue				
 
 					self.files_processed = "Files Processed: %d of %d" % (number_of_files_processed, total_files) 
@@ -201,11 +202,12 @@ class ocr_thread(QtCore.QThread):
 							offsets = range(0, int(offset_max + crop_height_px), offset_px)
 							number_of_crops = len(offsets)
 
-							self.current_task = "Converting PDF to tif..."
+                                                        logger.deb
+    							self.current_task = "Converting PDF to tif..."
 							self.update_dialog.emit()
 							
 							for crop_number, offset in enumerate(offsets):
-								logger.debug("Processing crop %d out of %d" % (crop_number, number_of_crops))
+								logger.debug("Processing crop %d out of %d" % (crop_number + 1, number_of_crops))
 								if not RUN_OCR_THREAD:
 									break
 
@@ -218,6 +220,9 @@ class ocr_thread(QtCore.QThread):
 										contents += ocr_processor.process_ocr()
 
 							if RUN_OCR_THREAD:
+								filtering = filter.string_filter(contents)
+								filtering.remove_excess_whitespace()
+								contents = filtering.filtered_string
 								database.insert_row(file_name, contents, file)
 								number_of_files_processed += 1
 
