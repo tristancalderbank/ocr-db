@@ -202,8 +202,9 @@ class ocr_thread(QtCore.QThread):
 							offsets = range(0, int(offset_max + crop_height_px), offset_px)
 							number_of_crops = len(offsets)
 
-                                                        logger.deb
-    							self.current_task = "Converting PDF to tif..."
+							logger.debug("offset max: %d" % offset_max)
+							logger.debug("offsets: " + str(offsets))
+							self.current_task = "Converting PDF to tif..."
 							self.update_dialog.emit()
 							
 							for crop_number, offset in enumerate(offsets):
@@ -241,11 +242,3 @@ if __name__ == '__main__':
 	main()
 
 
-"""
-	def search(self):
-		self.matchList.clear()
-		for item in self.matches:
-			if str(self.searchBar.text()) in item:
-				self.matchList.addItem(item) 		
-		
-"""
