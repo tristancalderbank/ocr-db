@@ -6,7 +6,7 @@ I originally developed this while working a job that involved a large amount of 
 Features:
 - Multipage support
 - Adjustable quality (dpi)
-- Gui
+- GUI
 
 
 Dependencies:
