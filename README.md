@@ -3,7 +3,7 @@ Finds pdfs, strips out text using Google's Tesseract engine, stores in a searcha
 
 I originally developed this while working a job that involved a large amount of scanned technical drawings. This was my attempt to make searching for specific text in these drawings easier. The idea of this project is not to actually use the text retrieved from OCR but to use it as meta-data for searching the documents.
 
-## Features:
+### Features:
 - Multipage support
 - Adjustable quality (dpi)
 - Experimental "moving crop" mode
@@ -11,7 +11,7 @@ I originally developed this while working a job that involved a large amount of 
 
 Note: This program was hacked together on a 32-bit windows computer and will probably not run on anything else without tweaking.
 
-## Dependencies:
+### Dependencies:
 - Python 2.7
 - [Tesseract](https://github.com/tesseract-ocr/tesseract/wiki)
 - [Ghostscript](http://ghostscript.com/download/gsdnld.html)
