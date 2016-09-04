@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>490</width>
-    <height>368</height>
+    <width>515</width>
+    <height>487</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,48 +17,136 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QLabel" name="label">
+      <property name="font">
+       <font>
+        <family>Fixedsys</family>
+        <pointsize>20</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="text">
-       <string>Search</string>
+       <string>ocr-db</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="searchBar"/>
-    </item>
-    <item>
-     <widget class="QListWidget" name="matchList"/>
-    </item>
-    <item>
      <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Folder</string>
+      <property name="font">
+       <font>
+        <family>Fixedsys</family>
+        <pointsize>6</pointsize>
+       </font>
       </property>
+      <property name="text">
+       <string>Created by Tristan Calderbank</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="title">
+       <string>Search</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLineEdit" name="searchBar"/>
+       </item>
+       <item>
+        <widget class="QListWidget" name="matchList"/>
+       </item>
+      </layout>
      </widget>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLineEdit" name="directoryBar"/>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="title">
+         <string>Scan</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLineEdit" name="directoryBar"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="folderSelect">
+             <property name="text">
+              <string>Folder</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QPushButton" name="runOCR">
+           <property name="text">
+            <string>Run OCR</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="folderSelect">
-        <property name="text">
-         <string>Browse</string>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="title">
+         <string>Settings</string>
         </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Quality</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioHigh">
+           <property name="text">
+            <string>High (slower)</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioLow">
+           <property name="text">
+            <string>Low (faster)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Experimental</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkMovingCrop">
+           <property name="text">
+            <string>Enable moving crop</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>
     </item>
-    <item>
-     <widget class="QPushButton" name="runOCR">
-      <property name="text">
-       <string>Run OCR</string>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <resources/>
  <connections/>

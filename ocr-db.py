@@ -27,6 +27,8 @@ if not DEBUG_OCR_DB:
 #flags
 RUN_OCR_THREAD = False
 
+crop_mode = False
+
 class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 
 	loaded_database = {}
@@ -43,6 +45,9 @@ class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 		self.directory = None
 		self.load_database()
 		self.searchBar.textEdited.connect(self.search)
+		self.radioHigh.clicked.connect(self.set_quality)
+		self.radioLow.clicked.connect(self.set_quality)
+		self.checkMovingCrop.clicked.connect(self.set_crop_mode)
 
 	def get_directory(self):
 		self.matchList.clear()
@@ -70,6 +75,21 @@ class main_gui(QtGui.QMainWindow, main_window.Ui_MainWindow):
 				self.matchList.addItem(row[1])
 				self.loaded_database.update({row[1]: row[2]})
 
+
+	def set_quality(self):
+		ip.dpi = 600
+		if self.radioLow.isChecked():
+			ip.dpi = 300
+
+		print "Quality set to %d." % ip.dpi
+
+	def set_crop_mode(self):
+		global crop_mode
+		crop_mode = False
+		if self.checkMovingCrop.isChecked():
+			crop_mode = True
+
+		print "Crop mode set to %s." % crop_mode
 
 	def search(self):
 		self.matchList.clear()
@@ -191,22 +211,27 @@ class ocr_thread(QtCore.QThread):
 							break
 						with ip.pdf_page(pdf, page_number) as page:
 
-							crop_height_percent = 100
-							crop_width_percent = 100
-							crop_height_px = (float(crop_height_percent) / 100) * page.height
-							offset_px = int(page.height * (float(crop_height_percent) / 100) / 2)
-							offset_max = (1 - (float(crop_height_percent) / 100)) * page.height
-							
 							contents = ""
 
-							offsets = range(0, int(offset_max + crop_height_px), offset_px)
+							crop_width_percent = 100
+
+							global crop_mode
+							if crop_mode:
+								crop_height_percent = 20
+								crop_height_px = int((float(crop_height_percent) / 100) * page.height)
+								offset_px = int(page.height * (float(crop_height_percent) / 100) / 2)
+								offset_max = int((1 - (float(crop_height_percent) / 100)) * page.height)
+								offsets = range(0, int(offset_max + crop_height_px), offset_px)
+
+							else:
+								crop_height_percent = 100
+								offsets = [0]
+							
 							number_of_crops = len(offsets)
 
-							logger.debug("offset max: %d" % offset_max)
-							logger.debug("offsets: " + str(offsets))
 							self.current_task = "Converting PDF to tif..."
 							self.update_dialog.emit()
-							
+
 							for crop_number, offset in enumerate(offsets):
 								logger.debug("Processing crop %d out of %d" % (crop_number + 1, number_of_crops))
 								if not RUN_OCR_THREAD:
