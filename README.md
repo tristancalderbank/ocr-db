@@ -26,7 +26,7 @@ Note: This program was hacked together on a 32-bit windows computer and will pro
 - You can then search the extracted contents using the search bar. 
 - Double click a file name in the list to show the contents that were extracted from that file.
 
-![Alt text](/screnshot/main window.png?raw=true "Optional Title")
+![main window](/screenshot/main window.png?raw=true)
 
 ### How it works
 - First we use pyPDF to pull out a page from the PDF 
