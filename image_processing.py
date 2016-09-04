@@ -13,6 +13,7 @@ DEBUG_IMAGE_PROCESSING = True
 if not DEBUG_IMAGE_PROCESSING:
     logger.setLevel(debug.logging.INFO)
 
+dpi = 600
 
 def path_to_filename(path):
     """ Returns filename from path by keeping after last '\'
@@ -26,12 +27,13 @@ class buffer_file:
 
 class image_magick:
 
-    dpi = 600
-
     def __init__(self, input_file):
         self.input_file = input_file
         self.width = self.get_width()
         self.height = self.get_height()
+
+        global dpi
+        self.dpi = dpi
 
     def get_width(self):
         return int(check_output('magick identify -format "%w" ' + self.input_file, shell=True))
@@ -40,7 +42,7 @@ class image_magick:
         return int(check_output('magick identify -format "%h" ' + self.input_file, shell=True))
 
     def crop(self, output_file, width, height, h_offset, v_offset):
-        shell_command = 'magick -density {} {} -crop {}%x{}%+{}+{} -alpha Off -depth 8 {}'.format(self.dpi, self.input_file, width, height, h_offset, v_offset, output_file)
+        shell_command = 'magick -density {} {} -crop {}%x{}%+{}+{} -alpha Off -depth 8 {}'.format(dpi, self.input_file, width, height, h_offset, v_offset, output_file)
         logger.debug(shell_command)
         check_output(shell_command)
 
